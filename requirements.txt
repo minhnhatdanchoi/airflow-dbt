@@ -1,0 +1,15 @@
+openpyxl==3.1.5
+sqlalchemy
+pyodbc==5.1.0
+apache-airflow-providers-telegram==4.6.0
+minio
+requests
+
+airflow-dbt
+
+opentelemetry-proto==1.29.0
+astronomer-cosmos
+
+dbt-core==1.9.1
+dbt-spark[pyHive]==1.9.0
+dbt-postgres==1.9.0
