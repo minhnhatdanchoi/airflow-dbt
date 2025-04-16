@@ -1,0 +1,412 @@
+version: 2
+
+models:
+
+  - name: vti_vjp_plan_actual_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+      - name: str_value
+
+
+  - name: vti_tvn_plan_actual_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+      - name: str_value
+
+
+  - name: vti_edu_plan_actual_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+      - name: str_value
+
+  - name: vti_gits_plan_actual_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+      - name: str_value
+
+  - name: vti_snp_plan_actual_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+      - name: str_value
+
+  - name: vti_apac_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_id
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: previous_value
+
+      - name: str_value
+
+
+  - name: vti_vn_plan_actual_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+        tests:
+        - relationships:
+            to: ref('silver_dim_expense_type')
+            field: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+        tests:
+        - relationships:
+            to: ref('silver_dim_department')
+            field: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+  - name: vti_vkr_plan_actual_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+      - name: str_value
+
+  - name: vti_conso_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: company
+
+      - name: previous_value
+
+  - name: vti_vvn_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_id
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+      - name: str_value
+
+  - name: vti_group_new
+    columns:
+      - name: date
+        test:
+          - not_null
+
+      - name: value
+
+      - name: value_type
+
+      - name: expense_code
+
+      - name: expense_type_5_id
+
+      - name: expense_type_5_name
+
+      - name: department_code
+
+      - name: business_unit_1_id
+
+      - name: business_unit_1_name
+
+      - name: business_unit_2_id
+
+      - name: business_unit_2_name
+
+      - name: business_unit_3_id
+
+      - name: business_unit_3_name
+
+      - name: ob_code
+
+      - name: source
+
+      - name: previous_value
+
+      - name: str_value

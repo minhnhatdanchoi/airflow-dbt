@@ -1,0 +1,958 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: vti_af_dwh
+    schema: bronze
+    tables:
+      - name: dim_ob
+      - name: dim_department
+      - name: dim_expense_type
+      - name: dim_expense_type_2
+      - name: dim_expense_type_3
+      - name: dim_expense_type_4
+      - name: dim_expense_type_5
+      - name: dim_revenue
+      - name: fact_gits_accounting_ledger
+      - name: fact_gits_accounting_ledger_planning
+      - name: fact_gits_japan_ledger
+      - name: fact_gits_exclusion_ledger
+      - name: fact_gits_accounting_ledger_planning_revenue
+      - name: fact_edu_accounting_ledger
+      - name: fact_edu_accounting_ledger_planning
+      - name: fact_tvn_accounting_ledger
+      - name: fact_tvn_accounting_ledger_planning
+      - name: fact_tvn_adjustment
+      - name: fact_vjp_adjustment_planning
+      - name: fact_vjp_accounting_ledger
+      - name: fact_vjp_accounting_ledger_planning
+      - name: fact_vjp_ledger_allocation
+      - name: fact_vjp_adjustment
+      - name: fact_vjp_revenue_planning
+      - name: fact_vkr_accounting_ledger
+      - name: fact_vkr_adjustment
+      - name: fact_vkr_planning_adjustment
+      - name: fact_vkr_planning_revenue
+      - name: fact_vkr_planning_accounting_ledger
+      - name: fact_vti_accounting_ledger
+      - name: fact_vti_accounting_ledger_planning
+      - name: fact_vti_adjustment
+      - name: fact_vti_adjustment_planning
+      - name: fact_conso_cloud_ledger
+      - name: fact_conso_elimination
+      - name: fact_conso_exchange_rate
+      - name: fact_conso_planning_cloud_ledger
+      - name: fact_conso_planning_exchange_rate
+      - name: fact_conso_planning_elimination
+      - name: fact_conso_willer_ledger
+      - name: fact_conso_planning_willer_ledger
+      - name: fact_fpt_conso_new
+      - name: fact_vti_snp_detail
+      - name: fact_vti_snp_planning_detail
+
+models:
+  - name: silver_dim_ob
+    columns:
+      - name: ob_id
+        description: "The unique identifier for the object."
+        tests:
+          - unique
+
+      - name: ob_code
+        description: "The code representing the object."
+
+      - name: ob_type_1_code
+        description: "The first level type code for the object."
+
+      - name: ob_type_2_code
+        description: "The second level type code for the object."
+
+      - name: ob_type_3_code
+        description: "The third level type code for the object."
+
+  - name: silver_dim_department
+    columns:
+      - name: deparment_id
+        description: "The unique identifier for the department."
+
+      - name: department_code
+        description: "The code representing the department."
+
+      - name: ob_id
+        description: "The unique identifier for the object ."
+
+      - name: unit_id
+        description: "The unique identifier for the unit."
+
+      - name: business_unit_1_id
+        description: "The unique identifier for the business unit 1."
+
+      - name: business_unit_1_name
+        description: "The name of the business unit 1."
+
+      - name: business_unit_2_id
+        description: "The unique identifier for the business unit 2."
+
+      - name: business_unit_2_name
+        description: "The name of the business unit 2."
+
+      - name: business_unit_3_id
+        description: "The unique identifier for the business unit 2."
+
+      - name: business_unit_3_name
+        description: "The name of the business unit 2."
+
+
+  - name: silver_dim_expense_type
+    columns:
+      - name: expense_code
+        description: "The unique identifier for the expense."
+        tests:
+          - unique
+
+      - name: expense_type_1_id
+        description: "The code representing the expense type 1."
+
+      - name: expense_type_5_id
+        description: "The code representing the expense type 5 ."
+
+  - name: silver_dim_expense_type_2
+    columns:
+        - name: expense_type_id
+          description: "The unique identifier for the expense type."
+          tests:
+            - unique
+        - name: expense_type_name
+          description: "The primary name for the expense type."
+
+        - name: expense_type_name_2
+          description: "The secondary name for the expense type."
+
+  - name: silver_dim_expense_type_3
+    columns:
+        - name: expense_type_name
+          description: "The name of the expense type."
+
+        - name: expense_type_id
+          description: "The unique identifier for the expense type."
+          tests:
+            - unique
+
+  - name: silver_dim_expense_type_4
+    columns:
+        - name: expense_type_id
+          description: "The unique identifier for the expense type."
+          tests:
+            - unique
+        - name: expense_type_name
+          description: "The primary name for the expense type."
+
+  - name: silver_dim_expense_type_5
+    columns:
+        - name: expense_type_id
+          description: "The unique identifier for the expense type."
+          tests:
+            - unique
+        - name: expense_type_name
+          description: "The primary name for the expense type."
+
+  - name: silver_dim_revenue
+    description: "This model transforms the bronze.dim_revenue table into a silver table."
+    columns:
+      - name: revenue_id
+        description: "The unique identifier for the revenue."
+        tests:
+          - unique
+      - name: revenue_name
+        description: "The name for the revenue."
+
+  - name: silver_fact_edu_accounting_ledger
+    description: "This model transforms the bronze.fact_edu_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+        test:
+          - not_null
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: course
+        description: "The course information related to the entry."
+      - name: cost_by_class
+        description: "The cost classification for the entry."
+      - name: general_ledger_cod
+        description: "The general ledger code for the entry."
+
+  - name: silver_fact_edu_accounting_ledger_planning
+    description: "This model transforms the bronze.fact_edu_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+        test:
+          - not_null
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: general_ledger_cod
+        description: "The general ledger code for the entry."
+
+  - name: silver_fact_gits_accounting_ledger
+    description: "This model transforms the bronze.fact_gits_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: general_ledger_code
+        description: "The general ledger code for the entry."
+
+  - name: silver_fact_gits_accounting_ledger_planning
+    description: "This model transforms the bronze.fact_gits_accounting_ledger_planning table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_gits_accounting_ledger_planning_revenue
+    description: "This model transforms the bronze.fact_gits_accounting_ledger_planning_revenue table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_gits_japan_ledger
+    description: "This model transforms the bronze.fact_gits_japan_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: general_ledger_code
+        description: "The general ledger code for the entry."
+
+
+  - name: silver_fact_gits_exclusion_ledger
+    description: "This model transforms the bronze.fact_gits_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_tvn_accounting_ledger
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: general_ledger_code
+        description: "The general ledger code for the entry."
+
+  - name: silver_fact_tvn_accounting_ledger_planning
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_tvn_adjustment
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: general_ledger_code
+        description: "The general ledger code for the entry."
+
+  - name: silver_fact_vjp_accounting_ledger
+    description: "This model transforms the bronze.fact_vjp_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vjp_accounting_ledger_planning
+    description: "This model transforms the bronze.fact_vjp_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vjp_adjustment
+    description: "This model transforms the bronze.fact_vjp_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vjp_adjustment_planning
+    description: "This model transforms the bronze.fact_vjp_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vjp_revenue_planning
+    description: "This model transforms the bronze.fact_vjp_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vjp_ledger_allocation
+    description: "This model transforms the bronze.fact_vjp_ledger_allocation table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+
+  - name: silver_fact_vkr_accounting_ledger
+    description: "This model transforms the bronze.fact_vkr_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vkr_planning_accounting_ledger
+    description: "This model transforms the bronze.fact_vkr_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vkr_adjustment
+    description: "This model transforms the bronze.fact_vkr_adjustment table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vkr_planning_adjustment
+    description: "This model transforms the bronze.fact_vkr_adjustment table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vkr_planning_revenue
+    description: "This model transforms the bronze.fact_vkr_adjustment table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+
+  - name: silver_fact_vti_accounting_ledger
+    description: "This model transforms the bronze.fact_vti_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: general_ledger_code
+        description: "The general ledger code for the entry."
+
+  - name: silver_fact_vti_accounting_ledger_planning
+    description: "This model transforms the  table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: general_ledger_code
+        description: "The general ledger code for the entry."
+
+  - name: silver_fact_vti_adjustment
+    description: "This model transforms the bronze.fact_vti_adjustment table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+        test:
+          - not_null
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the adjustment entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: general_ledger_code
+        description: "The general ledger code for the adjustment entry."
+
+  - name: silver_fact_vti_adjustment_planning
+    description: "This model transforms the bronze.fact_vti_adjustment table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+        test:
+          - not_null
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the adjustment entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: general_ledger_code
+        description: "The general ledger code for the adjustment entry."
+
+  - name: silver_fact_conso_cloud_ledger
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_conso_elimination
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: type
+
+  - name: silver_fact_conso_exchange_rate
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: rate_value
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_conso_planning_cloud_ledger
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_conso_planning_elimination
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+      - name: type
+
+  - name: silver_fact_conso_planning_exchange_rate
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: rate_value
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_conso_willer_ledger
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_conso_planning_willer_ledger
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_fpt_conso_new
+    columns:
+      - name: date
+        description: "The accounting date timestamp."
+      - name: value
+        description: "value"
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vti_snp_detail
+    description: "This model transforms the bronze.fact_vjp_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code
+
+  - name: silver_fact_vti_snp_planning_detail
+    description: "This model transforms the bronze.fact_vjp_accounting_ledger table into a silver table."
+    columns:
+      - name: accounting_date
+        description: "The accounting date timestamp."
+      - name: financial_report_value
+        description: "The value reported in the financial report."
+      - name: management_report_value
+        description: "The value reported in the management report."
+      - name: expense_code
+        description: "The expense code associated with the ledger entry."
+        tests:
+          - relationships:
+              to: ref('silver_dim_expense_type')
+              field: expense_code
+      - name: department_code
+        description: "The code for the department."
+        tests:
+          - relationships:
+              to: ref('silver_dim_department')
+              field: department_code

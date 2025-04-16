@@ -1,0 +1,12 @@
+financial_dwh:
+  outputs:
+    prod:
+      host: 10.1.12.78
+      port: 5432
+      type: postgres
+      schema: bronze
+      user: vti_af_dwh
+      password: vti_af_dwh
+      database: vti_af_dwh
+      threads: 8
+  target: prod
