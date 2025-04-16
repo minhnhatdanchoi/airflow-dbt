@@ -14,10 +14,14 @@
                     [DB dev dwh]: https://docs.google.com/spreadsheets/d/15kSTaDU_USQQOCsTKjdF2N7_VDTllm_kmazj171SuI4/edit?gid=22832642#gid=22832642
             - minio:
                 connection id: minio_s3_conn
-                other infomation:
-                    credentials: https://drive.google.com/file/d/1j3bS0tt10QBX9eAAxdQZFdOjOq9IlNbb/view
-                    [minio]: https://drive.google.com/file/d/134Ii0cqNDnDhjx2T1gANV_TAgeXBqTqx/view?usp=sharing
-    Quy tắc tạo file excel
+                connection type: Amazon Web Services
+                AWS Access Key ID: something like this: 79KRH25otdwym5l8g1Ef
+                AWS Secret Access Key: something like this: 9kCi9R4uJiznNuyHyOnKWDE9ZzR0o91wHy9YOvGY
+                add this to extra:
+                {
+                "endpoint_url": "10.1.12.78:9000" (replace with your endpoint)
+                }
+    Quy tắc tạo file excel: (Push this file excel to minio then airflow will detect it and create dag)
         Bắt buộc phải có 2 sheet và tên như sau
             Sheet [data]: chứa dữ liệu sẽ được load lên table DWH
             Sheet [metadata]: Dùng để mapping cột trong Sheet [data] lên table DWH
