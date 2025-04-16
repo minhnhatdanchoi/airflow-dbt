@@ -109,7 +109,7 @@ er AS (
   SELECT
     f.source,
     f.accounting_date date,
-    f.management_report_value value,
+    f.management_report_value as value,
     CASE WHEN exp.expense_type_5_id IN (18, 19) THEN 'r' ELSE 'e' END value_type,
     exp.expense_code,
     exp.expense_type_5_id,
@@ -130,7 +130,7 @@ er AS (
   SELECT
     f.source,
     f.accounting_date date,
-    -f.management_report_value * 10^6 value,
+    -f.management_report_value * 10^6 as value,
     CASE WHEN exp.expense_type_5_id IN (18, 19) THEN 'r' ELSE 'e' END value_type,
     exp.expense_code,
     exp.expense_type_5_id,

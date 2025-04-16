@@ -97,7 +97,7 @@ er AS (
     CASE
 	    WHEN exp.expense_type_5_id NOT IN (18, 19) AND fact.source = 'planning' THEN -fact.management_report_value
 	    ELSE fact.management_report_value
-	END value,
+	END as value,
     CASE
 	    WHEN exp.expense_type_5_id IN (18, 19) THEN 'r'
 	    ELSE 'e'

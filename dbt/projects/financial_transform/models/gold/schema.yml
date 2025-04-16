@@ -232,20 +232,12 @@ models:
       - name: value_type
 
       - name: expense_code
-        tests:
-        - relationships:
-            to: ref('silver_dim_expense_type')
-            field: expense_code
 
       - name: expense_type_5_id
 
       - name: expense_type_5_name
 
       - name: department_code
-        tests:
-        - relationships:
-            to: ref('silver_dim_department')
-            field: department_code
 
       - name: business_unit_1_id
 

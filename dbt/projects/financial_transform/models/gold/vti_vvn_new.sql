@@ -138,7 +138,7 @@ profit AS(
   	er.department_code,
   	er.ob_code,
     date_trunc('year', date) AS date,
-    SUM(CASE WHEN value_type = 'e' THEN -value ELSE value END) value
+    SUM(CASE WHEN value_type = 'e' THEN -value ELSE value END) as value
   FROM er
   WHERE expense_type_5_id <> 19
   GROUP BY 1, 2, date_trunc('year', date), er.ob_code
@@ -158,7 +158,7 @@ net_profit as(
     er.department_code,
     er.ob_code,
     date_trunc('year', date) AS date,
-    SUM(CASE WHEN value_type = 'e' THEN -value ELSE value END) value
+    SUM(CASE WHEN value_type = 'e' THEN -value ELSE value END) as value
   from
     er
   group by 1, 2, date_trunc('year', date), er.ob_code

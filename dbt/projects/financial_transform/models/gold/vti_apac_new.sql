@@ -87,7 +87,7 @@ er AS (
   SELECT
     f.source,
     f.accounting_date date,
-    f.financial_report_value value,
+    f.financial_report_value as value,
     CASE WHEN exp.expense_type_5_id IN (18, 19) THEN 'r' ELSE 'e' END value_type,
     exp.expense_code,
     exp.expense_type_5_id,
@@ -120,7 +120,7 @@ profit AS (
 subtotal_profit AS (
   SELECT
     pr.*,
-    pr2.value previous_value,
+    pr2.value as previous_value,
     'p' value_type
   FROM
     profit pr
@@ -139,7 +139,7 @@ net_profit AS (
 subtotal_net_profit AS (
   SELECT
     np.*,
-    np2.value previous_value,
+    np2.value as previous_value,
     'np' value_type
   FROM
     net_profit np
@@ -161,7 +161,7 @@ revenue AS (
 subtotal_revenue AS (
   SELECT
     rv.*,
-    rv2.value previous_value,
+    rv2.value as previous_value,
     'str' value_type
   FROM
     revenue rv
@@ -246,7 +246,7 @@ erc as (
 ),
 abc as(SELECT
     erc.*,
-    str.value str_value
+    str.value as str_value
 FROM
     erc
 LEFT JOIN subtotal_revenue str on date_trunc('month', erc.date) = str.date and erc.source = str.source)

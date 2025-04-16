@@ -219,8 +219,6 @@ models:
           - relationships:
               to: ref('silver_dim_expense_type')
               field: expense_code
-      - name: general_ledger_cod
-        description: "The general ledger code for the entry."
 
   - name: silver_fact_gits_accounting_ledger
     description: "This model transforms the bronze.fact_gits_accounting_ledger table into a silver table."
@@ -411,8 +409,6 @@ models:
         description: "The accounting date timestamp."
       - name: financial_report_value
         description: "The value reported in the financial report."
-      - name: management_report_value
-        description: "The value reported in the management report."
       - name: expense_code
         description: "The expense code associated with the ledger entry."
         tests:

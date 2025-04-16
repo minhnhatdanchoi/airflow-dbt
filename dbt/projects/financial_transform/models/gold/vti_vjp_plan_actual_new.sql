@@ -115,7 +115,7 @@ er AS (
   SELECT 
     fact.source,
     fact.accounting_date date, 
-    fact.financial_report_value value, 
+    fact.financial_report_value as value,
     CASE WHEN exp.expense_type_5_id IN (18, 19) THEN 'r' ELSE 'e' END value_type, 
     exp.expense_code, 
     exp.expense_type_5_id, 

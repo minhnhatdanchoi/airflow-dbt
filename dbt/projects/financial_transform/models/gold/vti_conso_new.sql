@@ -96,7 +96,7 @@ fact_tvn AS (
 fact_cloud AS (
   SELECT
     f.accounting_date date,
-    f.management_report_value value,
+    f.management_report_value as value,
     f.department_code,
     f.expense_code,
     'actual' source
@@ -105,7 +105,7 @@ fact_cloud AS (
   UNION ALL
   SELECT
     f.accounting_date date,
-    f.management_report_value value,
+    f.management_report_value as value,
     f.department_code,
     f.expense_code,
     'planning' source
@@ -115,7 +115,7 @@ fact_cloud AS (
 fact_willer AS (
   SELECT
     f.accounting_date date,
-    f.management_report_value value,
+    f.management_report_value as value,
     f.department_code,
     f.expense_code,
     'actual' source
@@ -124,7 +124,7 @@ fact_willer AS (
   UNION ALL
   SELECT
     f.accounting_date date,
-    f.management_report_value value,
+    f.management_report_value as value,
     f.department_code,
     f.expense_code,
     'planning' source
@@ -134,7 +134,7 @@ fact_willer AS (
 fact_elimination AS (
   SELECT
     ce.accounting_date date,
-    ce.management_report_value value,
+    ce.management_report_value as value,
     ce.department_code,
     ce.expense_code,
     ce.type,
@@ -144,7 +144,7 @@ fact_elimination AS (
   UNION ALL
   SELECT
     cpe.accounting_date date,
-    cpe.management_report_value value,
+    cpe.management_report_value as value,
     cpe.department_code,
     cpe.expense_code,
     cpe.type,
@@ -175,7 +175,7 @@ fact_vjp AS (
     CASE
 	    WHEN cer.rate_value IS NULL THEN f.value
     	ELSE f.value * cer.rate_value
-    END value,
+    END as value,
     f.department_code,
     f.expense_code,
     f.source
@@ -192,7 +192,7 @@ fact_vkr AS (
     CASE
 	    WHEN cer.rate_value IS NULL THEN f.value
     	ELSE f.value * cer.rate_value
-    END value,
+    END as value,
     f.department_code,
     f.expense_code,
     f.source
@@ -208,7 +208,7 @@ fact_vti AS (
 --1.1 Outsourcing
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -216,7 +216,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -224,7 +224,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -232,7 +232,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -240,7 +240,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -248,7 +248,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -282,7 +282,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -300,7 +300,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -308,7 +308,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -317,7 +317,7 @@ fact_vti AS (
   UNION ALL
   SELECT
     f.date,
-    f.value / 10^6 value,
+    f.value / 10^6 as value,
     f.expense_code,
     f.department_code,
     f.source
@@ -406,7 +406,7 @@ profit AS (
   	er.source,
   	er.company,
     date_trunc('month', date) AS date,
-    SUM(value) value
+    SUM(value) as value
   FROM
     er
   GROUP BY 1, 2, 3
