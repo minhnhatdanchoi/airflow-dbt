@@ -34,7 +34,14 @@
             cellC6:type_of_col_des: kiểu dữ liệu của cột trong db(postgress-sql)
 
             
-            
+#Function detail:
+Full pipeline:
+	ETL task : Scan all file excel in MinIO (Amazone web service like S3) each file have data and metadata sheet rule like above
+			   Each excel file will be a dag in airflow ( set schedule to run monthly - easy to know which one is error), after run it will push data to bronze schema ( posgresql )
+	DBT task:  Transform bronze to silver (remove null,....)
+			   Transform to gold (dataset)
+		   
+		   
 
 
             

@@ -1,0 +1,59 @@
+version: 2
+
+models:
+
+  - name: gold_pbi_vti_distribution_bo
+    columns:
+      - name: date
+        test:
+          - not_null
+      - name: unit_id
+      - name: department_code
+      - name: expense
+      - name: calendar_mm
+      - name: calendar_mm_total
+      - name: distribution
+
+  - name: gold_pbi_vti_distribution_comtor
+    columns:
+      - name: date
+        test:
+          - not_null
+      - name: department_code
+      - name: value
+      - name: distribution_regular
+
+  - name: gold_pbi_vti_distribution_comtor_overhead
+    columns:
+      - name: date
+        test:
+          - not_null
+      - name: unit_id
+      - name: ob_code
+      - name: department_code
+      - name: expense
+      - name: calendar_mm
+      - name: calendar_mm_total
+      - name: distribution
+
+  - name: gold_pbi_vti_distribution_qa
+    columns:
+      - name: date
+        test:
+          - not_null
+      - name: department_code
+      - name: value
+      - name: distribution_regular
+
+  - name: gold_pbi_vti_distribution_support
+    columns:
+      - name: date
+        test:
+          - not_null
+      - name: unit_id
+      - name: department_distribute_code
+      - name: department_code
+      - name: expense
+      - name: calendar_mm
+      - name: calendar_mm_total
+      - name: distribution
