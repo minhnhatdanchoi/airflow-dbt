@@ -3,38 +3,58 @@ from airflow.models.baseoperator import BaseOperator
 from airflow.utils.context import Context
 from airflow.providers.postgres.hooks.postgres import PostgresHook
 
+
 class CreateTableFromMetadataOperator(BaseOperator):
-  def __init__(self, dwh_connection,file_path, schema_bronze, **kwargs):
+  def __init__(self, dwh_connection, file_path, schema_bronze, **kwargs):
     super().__init__(**kwargs)
     self.dwh_connection = dwh_connection
     self.schema_bronze = schema_bronze
     self.file_path = file_path
+
   def synchronize_table_schema(self, hook, table_name, metadata_df):
+    # Query to get existing columns (PostgreSQL stores column names in lowercase)
     existing_columns_query = f"""
-        SELECT column_name, data_type 
-        FROM information_schema.columns 
-        WHERE table_schema = '{self.schema_bronze}' AND table_name = '{table_name}';
-        """
+            SELECT column_name, data_type 
+            FROM information_schema.columns 
+            WHERE table_schema = '{self.schema_bronze}' AND table_name = '{table_name}';
+            """
     existing_columns = hook.get_pandas_df(existing_columns_query)
-    existing_columns_dict = dict(
-      zip(existing_columns["column_name"], existing_columns["data_type"]))
 
+    # Create dictionary with lowercase keys for case-insensitive comparison
+    existing_columns_dict = {
+      col_name.lower(): data_type
+      for col_name, data_type in
+      zip(existing_columns["column_name"], existing_columns["data_type"])
+    }
+
+    # Log the existing columns for debugging
+    self.log.info(
+      f"Existing columns in table: {list(existing_columns_dict.keys())}")
+
+    # Process metadata columns and convert to lowercase for comparison
     metadata_columns_dict = dict(
-      zip(metadata_df["col_name_des"], metadata_df["type_of_col_des"]))
+        zip(metadata_df["col_name_des"], metadata_df["type_of_col_des"]))
 
-    # Detect changes
+    # Log the metadata columns for debugging
+    self.log.info(
+      f"Columns in metadata file: {list(metadata_columns_dict.keys())}")
+
+    # Detect new columns (case-insensitive comparison)
     for col_name, col_type in metadata_columns_dict.items():
-      if col_name not in existing_columns_dict:
+      if col_name.lower() not in existing_columns_dict:
         # Add new column
         alter_sql = f"ALTER TABLE {self.schema_bronze}.{table_name} ADD COLUMN {col_name} {col_type};"
         hook.run(alter_sql)
         self.log.info(f"Added column '{col_name}' with type '{col_type}'.")
+      else:
+        self.log.info(
+          f"Column '{col_name}' already exists (as '{col_name.lower()}'), skipping.")
 
   def execute(self, context: Context):
     file_name = self.file_path.split('/')[-1]
     download_task_id = f"download_file_{file_name}"
     file_path = context['ti'].xcom_pull(task_ids=download_task_id,
-                                              key='local_file_path')
+                                        key='local_file_path')
 
     try:
       metadata_df = pd.read_excel(file_path, sheet_name="metadata", header=5,
@@ -52,13 +72,13 @@ class CreateTableFromMetadataOperator(BaseOperator):
 
       # Check if the table exists and synchronize schema
       table_exists_query = f"""
-            SELECT EXISTS (
-                SELECT 1 
-                FROM information_schema.tables 
-                WHERE table_schema = '{self.schema_bronze}' 
-                AND table_name = '{table_name}'
-            );
-            """
+                SELECT EXISTS (
+                    SELECT 1 
+                    FROM information_schema.tables 
+                    WHERE table_schema = '{self.schema_bronze}' 
+                    AND table_name = '{table_name}'
+                );
+                """
       table_exists = hook.get_first(table_exists_query)[0]
 
       if table_exists:

@@ -94,8 +94,40 @@ class CleanAndLoadDataFactOperator(BaseOperator):
                 continue
 
             if dtype.lower() in ["timestamp", "datetime"]:
-                # Convert to pandas datetime, coercing errors
-                df[column] = pd.to_datetime(df[column], errors='coerce')
+                # Log the raw data for debugging
+                self.log.info(
+                    f"Raw {column} data sample: {df[column].head(5).tolist()}")
+
+                # Try multiple common date formats
+                date_formats = ['%m/%d/%Y', '%d/%m/%Y', '%Y-%m-%d']
+                success = False
+
+                for fmt in date_formats:
+                    try:
+                        temp_dates = pd.to_datetime(df[column], format=fmt,
+                                                    errors='coerce')
+                        valid_dates = temp_dates.notna().sum()
+
+                        if valid_dates > 0:
+                            df[column] = temp_dates
+                            self.log.info(
+                                f"Successfully parsed {valid_dates} dates with format {fmt}")
+                            self.log.info(
+                                f"Years found: {df[column].dt.year.dropna().unique().tolist()}")
+                            success = True
+                            break
+                    except Exception as e:
+                        self.log.info(f"Format {fmt} failed: {e}")
+
+                # If no explicit format worked, try pandas' default parser
+                if not success:
+                    self.log.info("Trying default pandas date parser...")
+                    df[column] = pd.to_datetime(df[column], errors='coerce')
+                    valid_dates = df[column].notna().sum()
+                    self.log.info(
+                        f"Default parser found {valid_dates} valid dates")
+                    self.log.info(
+                        f"Years found: {df[column].dt.year.dropna().unique().tolist()}")
             elif dtype.lower() == "float":
                 df[column] = pd.to_numeric(df[column], errors='coerce')
             elif dtype.lower() == "int":
@@ -108,14 +140,6 @@ class CleanAndLoadDataFactOperator(BaseOperator):
                 df[column] = df[column].replace(
                     {pd.NA: None, "nan": None, "NaT": None})
 
-        # if "accounting_date" in df.columns:
-        #     if not pd.api.types.is_datetime64_any_dtype(df["accounting_date"]):
-        #         self.log.error(
-        #             "The 'accounting_date' column could not be converted to datetime.")
-        #         raise ValueError("Invalid format in 'accounting_date' column.")
-        #
-        #     df.dropna(subset=["accounting_date"], inplace=True)
-        #     df = df[df["accounting_date"].dt.year == datetime.now().year]
         if time_column in df.columns:
             if not pd.api.types.is_datetime64_any_dtype(df[time_column]):
                 self.log.error(
@@ -124,7 +148,8 @@ class CleanAndLoadDataFactOperator(BaseOperator):
             self.log.info(f"Rows before cleaning: {len(df)}")
 
             df.dropna(subset=[time_column], inplace=True)
-            # df = df[df[time_column].dt.year == year]
+            year = int(year)
+            df = df[df[time_column].dt.year == year]
             self.log.info(f"filtered data in{year}")
             self.log.info(f"Rows after cleaning: {len(df)}")
 

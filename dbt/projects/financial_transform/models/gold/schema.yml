@@ -2,7 +2,7 @@ version: 2
 
 models:
 
-  - name: vti_vjp_plan_actual_new
+  - name: gold_vti_vjp_plan_actual
     columns:
       - name: date
         test:
@@ -39,7 +39,7 @@ models:
       - name: str_value
 
 
-  - name: vti_tvn_plan_actual_new
+  - name: gold_vti_tvn_plan_actual
     columns:
       - name: date
         test:
@@ -76,7 +76,7 @@ models:
       - name: str_value
 
 
-  - name: vti_edu_plan_actual_new
+  - name: gold_vti_edu_plan_actual
     columns:
       - name: date
         test:
@@ -112,7 +112,7 @@ models:
 
       - name: str_value
 
-  - name: vti_gits_plan_actual_new
+  - name: gold_vti_gits_plan_actual
     columns:
       - name: date
         test:
@@ -148,7 +148,7 @@ models:
 
       - name: str_value
 
-  - name: vti_snp_plan_actual_new
+  - name: gold_vti_snp_plan_actual
     columns:
       - name: date
         test:
@@ -184,7 +184,7 @@ models:
 
       - name: str_value
 
-  - name: vti_apac_new
+  - name: gold_vti_apac_plan_actual
     columns:
       - name: date
         test:
@@ -221,7 +221,7 @@ models:
       - name: str_value
 
 
-  - name: vti_vn_plan_actual_new
+  - name: gold_vti_vn_plan_actual
     columns:
       - name: date
         test:
@@ -255,7 +255,7 @@ models:
 
       - name: previous_value
 
-  - name: vti_vkr_plan_actual_new
+  - name: gold_vti_vkr_plan_actual
     columns:
       - name: date
         test:
@@ -291,7 +291,7 @@ models:
 
       - name: str_value
 
-  - name: vti_conso_new
+  - name: gold_vti_conso_plan_actual
     columns:
       - name: date
         test:
@@ -327,7 +327,7 @@ models:
 
       - name: previous_value
 
-  - name: vti_vvn_new
+  - name: gold_vti_vvn
     columns:
       - name: date
         test:
@@ -365,7 +365,7 @@ models:
 
       - name: str_value
 
-  - name: vti_group_new
+  - name: gold_vti_group
     columns:
       - name: date
         test:
@@ -402,3 +402,6 @@ models:
       - name: previous_value
 
       - name: str_value
+
+
+
